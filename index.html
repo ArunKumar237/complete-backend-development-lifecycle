@@ -1,0 +1,2391 @@
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complete Backend Development Lifecycle Reference Guide - DRF & FastAPI">
+    <meta name="theme-color" content="#0f1117">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Backend Dev Lifecycle — DRF & FastAPI Reference Guide</title>
+    <style>
+        :root {
+            --bg-primary: #0f1117;
+            --bg-secondary: #161822;
+            --bg-tertiary: #1c1f2e;
+            --bg-card: #1a1d2b;
+            --bg-hover: #232738;
+            --text-primary: #e4e6ef;
+            --text-secondary: #a0a4b8;
+            --text-muted: #6b7089;
+            --accent-blue: #5b9cf6;
+            --accent-purple: #a78bfa;
+            --accent-teal: #5eead4;
+            --accent-amber: #fbbf24;
+            --accent-rose: #fb7185;
+            --accent-emerald: #34d399;
+            --accent-orange: #fb923c;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-medium: rgba(255, 255, 255, 0.1);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.5);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.25s ease;
+            --transition-slow: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.75;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Top Navigation Bar */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 17, 23, 0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform var(--transition-normal);
+        }
+
+        .top-bar-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .top-bar-title span {
+            color: var(--accent-blue);
+        }
+
+        .toc-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-medium);
+            color: var(--text-secondary);
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: var(--font-sans);
+            font-weight: 500;
+            transition: all var(--transition-fast);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .toc-toggle:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+            border-color: var(--accent-blue);
+        }
+
+        .toc-toggle:active {
+            transform: scale(0.97);
+        }
+
+        .toc-toggle-icon {
+            width: 18px;
+            height: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 3px;
+        }
+
+        .toc-toggle-icon span {
+            display: block;
+            height: 2px;
+            background: currentColor;
+            border-radius: 1px;
+            transition: all var(--transition-fast);
+        }
+
+        .toc-toggle-icon span:nth-child(1) { width: 18px; }
+        .toc-toggle-icon span:nth-child(2) { width: 14px; }
+        .toc-toggle-icon span:nth-child(3) { width: 10px; }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-teal));
+            z-index: 999;
+            transition: width 0.1s linear;
+        }
+
+        /* Table of Contents Overlay */
+        .toc-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal);
+        }
+
+        .toc-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .toc-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: min(420px, 90vw);
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-subtle);
+            z-index: 1002;
+            transform: translateX(100%);
+            transition: transform var(--transition-slow);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .toc-panel.active {
+            transform: translateX(0);
+        }
+
+        .toc-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .toc-header h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+
+        .toc-close {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all var(--transition-fast);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .toc-close:hover {
+            background: var(--bg-hover);
+            color: var(--accent-rose);
+        }
+
+        .toc-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 0;
+            overscroll-behavior: contain;
+        }
+
+        .toc-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        .toc-content::-webkit-scrollbar-thumb {
+            background: var(--border-medium);
+            border-radius: 2px;
+        }
+
+        .toc-phase {
+            margin-bottom: 4px;
+        }
+
+        .toc-phase-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 24px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .toc-phase-title:hover {
+            color: var(--text-secondary);
+        }
+
+        .toc-phase-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .toc-phase:nth-child(1) .toc-phase-number { background: rgba(91, 156, 246, 0.15); color: var(--accent-blue); }
+        .toc-phase:nth-child(2) .toc-phase-number { background: rgba(167, 139, 250, 0.15); color: var(--accent-purple); }
+        .toc-phase:nth-child(3) .toc-phase-number { background: rgba(94, 234, 212, 0.15); color: var(--accent-teal); }
+        .toc-phase:nth-child(4) .toc-phase-number { background: rgba(251, 191, 36, 0.15); color: var(--accent-amber); }
+        .toc-phase:nth-child(5) .toc-phase-number { background: rgba(251, 113, 133, 0.15); color: var(--accent-rose); }
+        .toc-phase:nth-child(6) .toc-phase-number { background: rgba(52, 211, 153, 0.15); color: var(--accent-emerald); }
+        .toc-phase:nth-child(7) .toc-phase-number { background: rgba(249, 146, 60, 0.15); color: var(--accent-orange); }
+        .toc-phase:nth-child(8) .toc-phase-number { background: rgba(251, 113, 133, 0.15); color: var(--accent-rose); }
+        .toc-phase:nth-child(9) .toc-phase-number { background: rgba(91, 156, 246, 0.15); color: var(--accent-blue); }
+        .toc-phase:nth-child(10) .toc-phase-number { background: rgba(167, 139, 250, 0.15); color: var(--accent-purple); }
+        .toc-phase:nth-child(11) .toc-phase-number { background: rgba(94, 234, 212, 0.15); color: var(--accent-teal); }
+        .toc-phase:nth-child(12) .toc-phase-number { background: rgba(251, 191, 36, 0.15); color: var(--accent-amber); }
+        .toc-phase:nth-child(13) .toc-phase-number { background: rgba(52, 211, 153, 0.15); color: var(--accent-emerald); }
+
+        .toc-links {
+            list-style: none;
+            padding: 0 0 8px 0;
+        }
+
+        .toc-links a {
+            display: block;
+            padding: 7px 24px 7px 56px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 400;
+            line-height: 1.5;
+            transition: all var(--transition-fast);
+            border-left: 2px solid transparent;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .toc-links a:hover {
+            color: var(--accent-blue);
+            background: rgba(91, 156, 246, 0.05);
+            border-left-color: var(--accent-blue);
+        }
+
+        .toc-links a.active {
+            color: var(--accent-blue);
+            font-weight: 500;
+            border-left-color: var(--accent-blue);
+            background: rgba(91, 156, 246, 0.08);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 90px 24px 100px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 40px 0 60px;
+            position: relative;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 1px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(91, 156, 246, 0.1);
+            border: 1px solid rgba(91, 156, 246, 0.2);
+            color: var(--accent-blue);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.15rem);
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-top: 4px;
+        }
+
+        /* Phase Sections */
+        .phase-section {
+            margin-top: 64px;
+            animation: fadeInUp 0.5s ease both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .phase-header {
+            position: relative;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .phase-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+            padding: 4px 12px;
+            border-radius: 6px;
+        }
+
+        .phase-1 .phase-label { color: var(--accent-blue); background: rgba(91, 156, 246, 0.1); }
+        .phase-2 .phase-label { color: var(--accent-purple); background: rgba(167, 139, 250, 0.1); }
+        .phase-3 .phase-label { color: var(--accent-teal); background: rgba(94, 234, 212, 0.1); }
+        .phase-4 .phase-label { color: var(--accent-amber); background: rgba(251, 191, 36, 0.1); }
+        .phase-5 .phase-label { color: var(--accent-rose); background: rgba(251, 113, 133, 0.1); }
+        .phase-6 .phase-label { color: var(--accent-emerald); background: rgba(52, 211, 153, 0.1); }
+        .phase-7 .phase-label { color: var(--accent-orange); background: rgba(249, 146, 60, 0.1); }
+        .phase-8 .phase-label { color: var(--accent-rose); background: rgba(251, 113, 133, 0.1); }
+        .phase-9 .phase-label { color: var(--accent-blue); background: rgba(91, 156, 246, 0.1); }
+        .phase-10 .phase-label { color: var(--accent-purple); background: rgba(167, 139, 250, 0.1); }
+        .phase-11 .phase-label { color: var(--accent-teal); background: rgba(94, 234, 212, 0.1); }
+
+        .phase-header h2 {
+            font-size: clamp(1.5rem, 4vw, 1.9rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        /* Subsections */
+        .subsection {
+            margin-top: 40px;
+        }
+
+        .subsection h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .subsection h3::before {
+            content: '';
+            width: 3px;
+            height: 20px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .phase-1 .subsection h3::before { background: var(--accent-blue); }
+        .phase-2 .subsection h3::before { background: var(--accent-purple); }
+        .phase-3 .subsection h3::before { background: var(--accent-teal); }
+        .phase-4 .subsection h3::before { background: var(--accent-amber); }
+        .phase-5 .subsection h3::before { background: var(--accent-rose); }
+        .phase-6 .subsection h3::before { background: var(--accent-emerald); }
+        .phase-7 .subsection h3::before { background: var(--accent-orange); }
+        .phase-8 .subsection h3::before { background: var(--accent-rose); }
+        .phase-9 .subsection h3::before { background: var(--accent-blue); }
+        .phase-10 .subsection h3::before { background: var(--accent-purple); }
+        .phase-11 .subsection h3::before { background: var(--accent-teal); }
+
+        h4 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+
+        h5 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        /* Content Styling */
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            line-height: 1.8;
+        }
+
+        strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-bottom: 16px;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        ul > li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+            line-height: 1.75;
+        }
+
+        ul > li::before {
+            content: '';
+            position: absolute;
+            left: 2px;
+            top: 11px;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            opacity: 0.6;
+        }
+
+        ol {
+            counter-reset: ol-counter;
+        }
+
+        ol > li {
+            position: relative;
+            padding-left: 32px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+            line-height: 1.75;
+            counter-increment: ol-counter;
+        }
+
+        ol > li::before {
+            content: counter(ol-counter);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-medium);
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        /* Nested lists */
+        ul ul, ol ul, ul ol, ol ol {
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+
+        ul ul > li::before {
+            width: 4px;
+            height: 4px;
+            background: var(--accent-purple);
+            opacity: 0.5;
+            top: 12px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: border-color var(--transition-fast);
+        }
+
+        .card:hover {
+            border-color: var(--border-medium);
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card.drf {
+            border-left: 3px solid var(--accent-emerald);
+        }
+
+        .card.fastapi {
+            border-left: 3px solid var(--accent-teal);
+        }
+
+        .card.shared {
+            border-left: 3px solid var(--accent-purple);
+        }
+
+        .card.warning {
+            border-left: 3px solid var(--accent-amber);
+            background: rgba(251, 191, 36, 0.03);
+        }
+
+        .card.important {
+            border-left: 3px solid var(--accent-rose);
+            background: rgba(251, 113, 133, 0.03);
+        }
+
+        /* Comparison Table */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 24px 0;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            min-width: 600px;
+        }
+
+        thead {
+            background: var(--bg-tertiary);
+        }
+
+        th {
+            padding: 14px 18px;
+            text-align: left;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-medium);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 18px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-subtle);
+            line-height: 1.6;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(91, 156, 246, 0.03);
+        }
+
+        td:first-child {
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+
+        /* Callout Boxes */
+        .callout {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+            margin: 24px 0;
+            border: 1px solid var(--border-subtle);
+            position: relative;
+        }
+
+        .callout.tip {
+            border-left: 3px solid var(--accent-emerald);
+        }
+
+        .callout.note {
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        .callout.caution {
+            border-left: 3px solid var(--accent-amber);
+        }
+
+        .callout-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+        .callout.tip .callout-label { color: var(--accent-emerald); }
+        .callout.note .callout-label { color: var(--accent-blue); }
+        .callout.caution .callout-label { color: var(--accent-amber); }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-medium), transparent);
+            margin: 64px 0;
+        }
+
+        /* Reminders Section */
+        .reminders-grid {
+            display: grid;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .reminder-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            transition: all var(--transition-fast);
+        }
+
+        .reminder-item:hover {
+            border-color: var(--border-medium);
+            transform: translateY(-1px);
+        }
+
+        .reminder-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1rem;
+            background: rgba(91, 156, 246, 0.1);
+        }
+
+        .reminder-text {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        /* Back to top */
+        .back-to-top {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-medium);
+            border-radius: 50%;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all var(--transition-normal);
+            -webkit-tap-highlight-color: transparent;
+            box-shadow: var(--shadow-md);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        .back-to-top svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            html {
+                scroll-padding-top: 70px;
+            }
+
+            .main-content {
+                padding: 80px 18px 80px;
+            }
+
+            .hero {
+                padding: 24px 0 48px;
+            }
+
+            .phase-section {
+                margin-top: 48px;
+            }
+
+            .subsection {
+                margin-top: 32px;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            .toc-toggle-text {
+                display: none;
+            }
+
+            .toc-toggle {
+                padding: 8px 10px;
+            }
+
+            table {
+                font-size: 0.82rem;
+            }
+
+            th, td {
+                padding: 10px 14px;
+            }
+
+            .back-to-top {
+                bottom: 16px;
+                right: 16px;
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 72px 14px 70px;
+            }
+
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .phase-header h2 {
+                font-size: 1.35rem;
+            }
+
+            .subsection h3 {
+                font-size: 1.1rem;
+            }
+
+            body {
+                font-size: 15px;
+            }
+        }
+
+        /* Selection */
+        ::selection {
+            background: rgba(91, 156, 246, 0.3);
+            color: var(--text-primary);
+        }
+
+        /* Print */
+        @media print {
+            .top-bar, .toc-panel, .toc-overlay, .back-to-top, .progress-bar {
+                display: none !important;
+            }
+            body {
+                background: white;
+                color: #1a1a1a;
+            }
+            .main-content {
+                padding: 20px;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <nav class="top-bar" id="topBar">
+        <div class="top-bar-title">
+            <span>⚡</span> Backend Dev — DRF & FastAPI
+        </div>
+        <button class="toc-toggle" id="tocToggle" aria-label="Toggle table of contents">
+            <div class="toc-toggle-icon">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <span class="toc-toggle-text">Contents</span>
+        </button>
+    </nav>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- TOC Overlay -->
+    <div class="toc-overlay" id="tocOverlay"></div>
+
+    <!-- TOC Panel -->
+    <aside class="toc-panel" id="tocPanel">
+        <div class="toc-header">
+            <h2>📑 Contents</h2>
+            <button class="toc-close" id="tocClose" aria-label="Close table of contents">✕</button>
+        </div>
+        <div class="toc-content">
+            <div class="toc-phase">
+                <div class="toc-phase-title" onclick="toggleTocSection(this)">
+                    <span class="toc-phase-number">1</span> Project Planning
+                </div>
+                <ul class="toc-links">
+                    <li><a href="#requirements-gathering">Requirements Gathering</a></li>
+                    <li><a href="#tech-selection">Technology Selection</a></li>
+                    <li><a href="#architecture-design">Architecture Design</a></li>
+                    <li><a href="#project-scoping">Project Scoping</a></li>
+                </ul>
+            </div>
+            <div class="toc-phase">
+                <div class="toc-phase-title" onclick="toggleTocSection(this)">
+                    <span class="toc-phase-number">2</span> Project Setup
+                </div>
+                <ul class="toc-links">
+                    <li><a href="#env-management">Environment Management</a></li>
+                    <li><a href="#version-control">Version Control Setup</a></li>
+                    <li><a href="#project-structure">Project Structure</a></li>
+                    <li><a href="#tooling">Tooling Configuration</a></li>
+                </ul>
+            </div>
+            <div class="toc-phase">
+                <div class="toc-phase-title" onclick="toggleTocSection(this)">
+                    <span class="toc-phase-number">3</span> Database Design
+                </div>
+                <ul class="toc-links">
+                    <li><a href="#db-selection">Database Selection</a></li>
+                    <li><a href="#schema-design">Schema Design Principles</a></li>
+                    <li><a href="#data-modeling">Data Modeling Approaches</a></li>
+                    <li><a href="#migration-strategy">Migration Strategy</a></li>
+                </ul>
+            </div>
+            <div class="toc-phase">
+                <div class="toc-phase-title" onclick="toggleTocSection(this)">
+                    <span class="toc-phase-number">4</span> API Development
+                </div>
+                <ul class="toc-links">
+                    <li><a href="#rest-principles">RESTful API Principles</a></li>
+                    <li><a href="#endpoint-design">Endpoint Design</a></li>
+                    <li><a href="#request-response">Request & Response Handling</a></li>
+                    <li><a href="#auth">Authentication & Authorization</a></li>
+                    <li><a href="#api-versioning">API Versioning</a></li>
+                </ul>
+            </div>
+            <div class="toc-phase">
+                <div class="toc-phase-title" onclick="toggleTocSection(this)">
+                    <span class="toc-phase-number">5</span> Code Organization
+                </div>
+                <ul class="toc-links">
+                    <li><a href="#layered-architecture">Layered Architecture</a></li>
+                    <li><a href="#settings-config">Settings & Configuration</a></li>
+                    <li><a href="#dependency-injection">Dependency Injection</a></li>
+                </ul>
+            </div>
+            <div class="toc-phase">
+                <div class="toc-phase-title" onclick="toggleTocSection(this)">
+                    <span class="toc-phase-number">6</span> Testing
+                </div>
+                <ul class="toc-links">
+                    <li><a href="#testing-philosophy">Testing Philosophy</a></li>
+                    <li><a href="#testing-strategy">Strategy by Layer</a></li>
+                    <li><a href="#test-infrastructure">Test Infrastructure</a></li>
+                    <li><a href="#test-quality">Test Quality Metrics</a></li>
+                </ul>
+            </div>
+            <div class="toc-phase">
+                <div class="toc-phase-title" onclick="toggleTocSection(this)">
+                    <span class="toc-phase-number">7</span> Performance & Optimization
+                </div>
+                <ul class="toc-links">
+                    <li><a href="#query-optimization">Database Query Optimization</a></li>
+                    <li><a href="#caching">Caching Strategy</a></li>
+                    <li><a href="#async-processing">Asynchronous Processing</a></li>
+                    <li><a href="#perf-monitoring">Performance Monitoring</a></li>
+                </ul>
+            </div>
+            <div class="toc-phase">
+                <div class="toc-phase-title" onclick="toggleTocSection(this)">
+                    <span class="toc-phase-number">8</span> Security
+                </div>
+                <ul class="toc-links">
+                    <li><a href="#owasp">OWASP Top 10 Protection</a></li>
+                    <li><a href="#rate-limiting">Rate Limiting</a></li>
+                    <li><a href="#input-validation">Input Validation</a></li>
+                    <li><a href="#secrets-management">Secrets Management</a></li>
+                </ul>
+            </div>
+            <div class="toc-phase">
+                <div class="toc-phase-title" onclick="toggleTocSection(this)">
+                    <span class="toc-phase-number">9</span> Documentation
+                </div>
+                <ul class="toc-links">
+                    <li><a href="#api-docs">API Documentation</a></li>
+                    <li><a href="#internal-docs">Internal Documentation</a></li>
+                </ul>
+            </div>
+            <div class="toc-phase">
+                <div class="toc-phase-title" onclick="toggleTocSection(this)">
+                    <span class="toc-phase-number">10</span> Deployment
+                </div>
+                <ul class="toc-links">
+                    <li><a href="#app-server">Application Server Selection</a></li>
+                    <li><a href="#containerization">Containerization</a></li>
+                    <li><a href="#cicd">CI/CD Pipeline</a></li>
+                    <li><a href="#infrastructure">Infrastructure Decisions</a></li>
+                    <li><a href="#prod-checklist">Production Checklist</a></li>
+                </ul>
+            </div>
+            <div class="toc-phase">
+                <div class="toc-phase-title" onclick="toggleTocSection(this)">
+                    <span class="toc-phase-number">11</span> Maintenance & Scaling
+                </div>
+                <ul class="toc-links">
+                    <li><a href="#logging">Logging</a></li>
+                    <li><a href="#monitoring">Monitoring & Alerting</a></li>
+                    <li><a href="#scaling">Scaling Strategies</a></li>
+                    <li><a href="#long-term">Long-Term Maintenance</a></li>
+                </ul>
+            </div>
+            <div class="toc-phase">
+                <div class="toc-phase-title">
+                    <span class="toc-phase-number">⚡</span> Quick Reference
+                </div>
+                <ul class="toc-links">
+                    <li><a href="#decision-table">Decision Reference Table</a></li>
+                    <li><a href="#final-reminders">Final Reminders</a></li>
+                </ul>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+
+        <!-- Hero -->
+        <header class="hero" id="top">
+            <div class="hero-badge">📘 Reference Guide</div>
+            <h1>Complete Backend<br><span class="gradient-text">Development Lifecycle</span></h1>
+            <p class="hero-subtitle">DRF & FastAPI — From Planning to Production</p>
+        </header>
+
+        <!-- ============================================= -->
+        <!-- PHASE 1: PROJECT PLANNING -->
+        <!-- ============================================= -->
+        <section class="phase-section phase-1" id="phase-1">
+            <div class="phase-header">
+                <div class="phase-label">Phase 1</div>
+                <h2>Project Planning</h2>
+            </div>
+
+            <div class="subsection" id="requirements-gathering">
+                <h3>1.1 Requirements Gathering</h3>
+                <p><strong>Before writing a single line, answer these questions thoroughly:</strong></p>
+                <ul>
+                    <li><strong>Who are the consumers of this API?</strong> Mobile apps, SPAs, third-party developers, internal microservices, or a combination?</li>
+                    <li><strong>What are the core business entities?</strong> Identify the nouns of your domain — users, orders, products, transactions, etc.</li>
+                    <li><strong>What operations must be supported?</strong> Map each entity to the actions users or systems need to perform on it — create, read, update, delete, search, aggregate, export.</li>
+                    <li><strong>What are the expected traffic patterns?</strong> Estimate concurrent users, requests per second, peak versus average load, and read-to-write ratios.</li>
+                    <li><strong>What are the non-functional requirements?</strong> Latency targets, uptime SLAs, compliance obligations (GDPR, HIPAA, PCI-DSS), data residency rules, and audit trail needs.</li>
+                    <li><strong>What integrations are required?</strong> Payment gateways, email providers, file storage services, third-party APIs, message brokers, analytics platforms.</li>
+                    <li><strong>What is the timeline and team composition?</strong> This directly influences technology choice, architecture complexity, and scope.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="tech-selection">
+                <h3>1.2 Technology Selection: DRF vs. FastAPI</h3>
+                <p>This is the single most consequential early decision. Neither framework is universally better; the right choice depends on context.</p>
+
+                <div class="card drf">
+                    <div class="card-title">🟢 Choose Django REST Framework when:</div>
+                    <ul>
+                        <li>Your project needs a <strong>full-featured web framework</strong> beyond just the API layer — admin panels, template rendering, form handling, session management</li>
+                        <li>You are working with a <strong>relational-heavy data model</strong> with complex relationships, and you want a mature, battle-tested ORM out of the box</li>
+                        <li>Your team has <strong>strong Django experience</strong> and can leverage the enormous ecosystem of Django packages — django-allauth, django-celery-beat, django-filter, django-guardian, and hundreds more</li>
+                        <li>You need a <strong>built-in admin interface</strong> for internal users or content management, which Django provides essentially for free</li>
+                        <li>The project is a <strong>monolithic application</strong> where having everything in one cohesive framework reduces integration overhead</li>
+                        <li>You value <strong>convention over configuration</strong> and want the framework to make many structural decisions for you</li>
+                        <li>Your application is primarily <strong>synchronous</strong> in nature, with I/O-bound async needs handled by task queues</li>
+                        <li>You need <strong>mature, well-documented authentication systems</strong> like session auth, token auth, OAuth2 via third-party packages</li>
+                        <li><strong>Long-term maintainability</strong> is paramount — 20-year track record, predictable release cycles, enormous community</li>
+                    </ul>
+                </div>
+
+                <div class="card fastapi">
+                    <div class="card-title">🔵 Choose FastAPI when:</div>
+                    <ul>
+                        <li>Your project is a <strong>dedicated API service</strong> or microservice that does not need an admin panel, template rendering, or the full Django ecosystem</li>
+                        <li><strong>High-concurrency I/O-bound workloads</strong> are central — many simultaneous connections to external APIs, databases, WebSockets, or streaming endpoints</li>
+                        <li>You want <strong>native async/await support</strong> as a first-class citizen rather than an afterthought</li>
+                        <li><strong>Automatic OpenAPI documentation</strong> generated from type hints is important for developer experience and client SDK generation</li>
+                        <li>Your team is comfortable with <strong>Python type hints and Pydantic</strong> for data validation</li>
+                        <li>You are building <strong>microservices</strong> and want a lightweight, minimal framework that starts fast and consumes fewer resources</li>
+                        <li><strong>Performance benchmarks</strong> matter significantly — FastAPI on ASGI servers consistently outperforms DRF on WSGI for I/O-bound tasks</li>
+                        <li>You want <strong>modern Python patterns</strong> — dependency injection, type-driven development, functional composition</li>
+                        <li>The project needs <strong>WebSocket support, server-sent events, or streaming responses</strong> as core features</li>
+                    </ul>
+                </div>
+
+                <div class="callout tip">
+                    <div class="callout-label">💡 Hybrid Consideration</div>
+                    <p>It is entirely valid to use both within a single organization — Django with DRF for the primary application with its admin and ORM, and FastAPI for high-performance microservices that handle specific tasks like real-time notifications, data ingestion pipelines, or ML model serving.</p>
+                </div>
+            </div>
+
+            <div class="subsection" id="architecture-design">
+                <h3>1.3 Architecture Design Decisions</h3>
+
+                <h4>Monolith vs. Microservices</h4>
+                <ul>
+                    <li><strong>Start monolithic unless you have a clear reason not to.</strong> Premature microservice adoption introduces distributed systems complexity that small teams cannot afford.</li>
+                    <li><strong>DRF naturally fits the monolithic approach</strong> due to Django's "batteries included" philosophy.</li>
+                    <li><strong>FastAPI naturally fits the microservice approach</strong> due to its lightweight nature, but works perfectly as a monolith too.</li>
+                    <li>Plan for a <strong>modular monolith</strong> — structure with clear boundaries, making future extraction into services possible without a rewrite.</li>
+                </ul>
+
+                <h4>Synchronous vs. Asynchronous</h4>
+                <ul>
+                    <li><strong>DRF is historically synchronous</strong>, running on WSGI servers. Django 4.1+ added async view support, but the ecosystem is still primarily synchronous. Offload long-running tasks to <strong>Celery, Django-Q, or Huey</strong>.</li>
+                    <li><strong>FastAPI is natively asynchronous</strong>, running on ASGI servers. You can mix sync and async endpoints freely.</li>
+                    <li><strong>Choose async when</strong> you have many concurrent connections waiting on I/O — external API calls, database queries on async-capable drivers, WebSocket connections.</li>
+                    <li><strong>Choose sync when</strong> your workload is CPU-bound, your database driver is synchronous, or your team is less experienced with async pitfalls.</li>
+                </ul>
+
+                <h4>API Style</h4>
+                <ul>
+                    <li>Both frameworks are built for <strong>REST APIs</strong>. For <strong>GraphQL</strong>, consider Strawberry (both) or Graphene-Django (DRF). For <strong>gRPC</strong>, use grpcio with either framework.</li>
+                    <li>Consider <strong>JSON:API or HAL</strong> for hypermedia-driven APIs if you need standardized pagination, filtering, and relationship representations.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="project-scoping">
+                <h3>1.4 Project Scoping</h3>
+                <ul>
+                    <li>Define an <strong>MVP scope</strong> — the smallest useful API surface that delivers value. Resist the urge to design for every future possibility.</li>
+                    <li>Create an <strong>API contract</strong> early using OpenAPI specification files as the contract between frontend and backend teams.</li>
+                    <li>Identify <strong>bounded contexts</strong> — groups of related entities and operations that form cohesive units.</li>
+                    <li>Establish <strong>versioning strategy</strong> from day one — URI versioning, header versioning, or query parameter versioning. Changing this later is painful.</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ============================================= -->
+        <!-- PHASE 2: PROJECT SETUP -->
+        <!-- ============================================= -->
+        <section class="phase-section phase-2" id="phase-2">
+            <div class="phase-header">
+                <div class="phase-label">Phase 2</div>
+                <h2>Project Setup</h2>
+            </div>
+
+            <div class="subsection" id="env-management">
+                <h3>2.1 Python Environment Management</h3>
+                <ol>
+                    <li><strong>Choose a Python version</strong>: Use the latest stable release (3.11 or 3.12 recommended) for performance improvements and modern type hint support.</li>
+                    <li><strong>Select an environment and dependency management tool</strong>:
+                        <ul>
+                            <li><strong>pip + venv</strong>: Standard library approach. Simple, universally understood.</li>
+                            <li><strong>Poetry</strong>: Dependency resolution, virtual environment management, and packaging in one tool. Uses pyproject.toml.</li>
+                            <li><strong>PDM or Hatch</strong>: Modern alternatives following PEP 621 standards.</li>
+                            <li><strong>uv</strong>: Very fast, Rust-based drop-in replacement for pip and venv. Increasingly popular.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Pin all dependencies</strong> including transitive ones for production builds.</li>
+                    <li><strong>Separate dependency groups</strong>: Maintain distinct groups for production, development, and testing.</li>
+                </ol>
+            </div>
+
+            <div class="subsection" id="version-control">
+                <h3>2.2 Version Control Setup</h3>
+                <ol>
+                    <li><strong>Initialize a Git repository immediately</strong> — even before installing dependencies.</li>
+                    <li><strong>Create a comprehensive .gitignore</strong> covering Python bytecode, virtual environments, IDE configurations, environment variable files.</li>
+                    <li><strong>Establish a branching strategy</strong>:
+                        <ul>
+                            <li><strong>Trunk-based development</strong> for small teams — short-lived feature branches merged frequently.</li>
+                            <li><strong>Git Flow</strong> for larger teams or projects with formal release cycles.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Set up commit conventions</strong>: Use conventional commits (feat, fix, chore, docs, refactor, test).</li>
+                    <li><strong>Configure pre-commit hooks</strong> for automated linting, formatting, type checking, and secret detection.</li>
+                    <li><strong>Never commit secrets</strong> — no API keys, database passwords, or private certificates in the repository.</li>
+                </ol>
+            </div>
+
+            <div class="subsection" id="project-structure">
+                <h3>2.3 Project Structure</h3>
+
+                <div class="card drf">
+                    <div class="card-title">DRF Project Structure</div>
+                    <ul>
+                        <li>The <strong>project directory</strong> contains root configuration — settings module, root URL configuration, WSGI/ASGI entry point.</li>
+                        <li>Each <strong>app</strong> represents a bounded context — users, orders, products. Contains models, serializers, views, URLs, admin, signals, and tests.</li>
+                        <li><strong>Common utilities</strong> go in a dedicated utils or core app — custom permissions, pagination, exception handlers, base models, reusable mixins.</li>
+                        <li>The <strong>settings module</strong> should be split into base, development, staging, and production files.</li>
+                        <li>Place <strong>Celery task definitions</strong> within each app to maintain domain cohesion.</li>
+                    </ul>
+                </div>
+
+                <div class="card fastapi">
+                    <div class="card-title">FastAPI Project Structure</div>
+                    <ul>
+                        <li>FastAPI <strong>does not enforce a structure</strong> — establish conventions early.</li>
+                        <li>Organize by <strong>feature or domain</strong> — each gets a package with router, schemas, models, service layer, dependencies, and tests.</li>
+                        <li>A <strong>core or common package</strong> contains shared configuration, database session management, security, exception handlers, middleware.</li>
+                        <li>The <strong>configuration module</strong> loads environment variables using Pydantic's BaseSettings with type validation.</li>
+                        <li>Use a <strong>src layout</strong> to avoid import ambiguity.</li>
+                    </ul>
+                </div>
+
+                <div class="callout caution">
+                    <div class="callout-label">⚠️ Critical Principle for Both</div>
+                    <p><strong>Separate concerns into layers</strong>: routes/views handle HTTP concerns, services contain business logic, repositories/ORM models handle data access, and schemas/serializers handle validation and transformation. Never put business logic directly in views or serializers.</p>
+                </div>
+            </div>
+
+            <div class="subsection" id="tooling">
+                <h3>2.4 Tooling Configuration</h3>
+                <ul>
+                    <li><strong>Linting</strong>: Use <strong>Ruff</strong> as the primary linter — replaces flake8, isort, pyupgrade with a single, extremely fast tool.</li>
+                    <li><strong>Formatting</strong>: Use <strong>Ruff's formatter</strong> or <strong>Black</strong> for consistent, opinionated formatting. Eliminate formatting debates from code reviews.</li>
+                    <li><strong>Type Checking</strong>: Use <strong>mypy</strong> or <strong>pyright</strong>. FastAPI projects benefit enormously from strict type checking.</li>
+                    <li><strong>Security Scanning</strong>: Configure <strong>Bandit</strong> for static analysis and <strong>pip-audit</strong> for dependency vulnerability scanning.</li>
+                    <li><strong>All tool configurations</strong> belong in pyproject.toml to avoid config file sprawl.</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ============================================= -->
+        <!-- PHASE 3: DATABASE DESIGN -->
+        <!-- ============================================= -->
+        <section class="phase-section phase-3" id="phase-3">
+            <div class="phase-header">
+                <div class="phase-label">Phase 3</div>
+                <h2>Database Design</h2>
+            </div>
+
+            <div class="subsection" id="db-selection">
+                <h3>3.1 Database Selection</h3>
+                <h4>PostgreSQL (Recommended Default)</h4>
+                <ul>
+                    <li><strong>Best general-purpose choice</strong> for both DRF and FastAPI. Excellent JSON fields, full-text search, array types, advanced indexing.</li>
+                    <li><strong>Django's ORM</strong> has the deepest PostgreSQL integration — ArrayField, JSONField, HStoreField, range fields, full-text search lookups.</li>
+                    <li><strong>FastAPI with SQLAlchemy</strong> also has excellent PostgreSQL support through asyncpg (async) or psycopg3 (sync/async).</li>
+                    <li>Use <strong>PostGIS</strong> extension for geospatial data requirements.</li>
+                </ul>
+
+                <h4>MySQL/MariaDB</h4>
+                <ul>
+                    <li>Viable but fewer advanced features. Choose only with existing MySQL expertise and infrastructure.</li>
+                    <li>Be aware of <strong>character set and collation pitfalls</strong>, particularly utf8 vs utf8mb4.</li>
+                </ul>
+
+                <h4>SQLite</h4>
+                <ul>
+                    <li><strong>Development and testing only</strong> — never for production. Lacks concurrent write support.</li>
+                </ul>
+
+                <h4>MongoDB</h4>
+                <ul>
+                    <li>Consider <strong>only if data is genuinely schema-less</strong>. Most applications that think they need MongoDB actually need PostgreSQL with a JSON column.</li>
+                    <li>DRF: djongo or mongoengine (less mature). FastAPI: Motor (async) with Beanie or ODMantic.</li>
+                </ul>
+
+                <h4>Redis</h4>
+                <ul>
+                    <li>Not a primary database but essential as <strong>caching layer, session store, message broker, and rate limiting backend</strong>.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="schema-design">
+                <h3>3.2 Schema Design Principles</h3>
+                <ul>
+                    <li><strong>Normalize first, denormalize deliberately.</strong> Start with Third Normal Form and only denormalize with measured performance data.</li>
+                    <li><strong>Every table gets a primary key.</strong> Use UUIDs for public-facing identifiers (prevent enumeration attacks). Use auto-incrementing integers for internal PKs (join performance). You can have both.</li>
+                    <li><strong>Use created_at and updated_at timestamps on every table.</strong> Invaluable for debugging, auditing, and sync.</li>
+                    <li><strong>Implement soft deletes carefully.</strong> A deleted_at field allows recovery but complicates every query. Consider archive tables instead.</li>
+                    <li><strong>Design for the queries you will run</strong>, not just the data you will store. Examine API endpoints and identify access patterns.</li>
+                    <li><strong>Foreign keys should always have explicit ON DELETE behavior</strong> — CASCADE, SET NULL, PROTECT, or RESTRICT. Default to PROTECT.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="data-modeling">
+                <h3>3.3 Data Modeling Approaches</h3>
+
+                <div class="card drf">
+                    <div class="card-title">DRF Approach (Django ORM)</div>
+                    <ul>
+                        <li>Models are Python classes inheriting from <strong>django.db.models.Model</strong>.</li>
+                        <li>Use <strong>abstract base models</strong> for shared fields like timestamps, soft delete flags, or audit fields.</li>
+                        <li><strong>Model managers and QuerySet methods</strong> encapsulate common queries — keep query logic out of views and serializers.</li>
+                        <li>Prefer <strong>abstract models</strong> over multi-table inheritance (avoid implicit JOIN overhead).</li>
+                        <li><strong>Model-level validation</strong> ensures data integrity regardless of entry point (API, admin, shell, management commands).</li>
+                    </ul>
+                </div>
+
+                <div class="card fastapi">
+                    <div class="card-title">FastAPI Approach (SQLAlchemy / Tortoise ORM / SQLModel)</div>
+                    <ul>
+                        <li><strong>SQLAlchemy 2.0</strong> is the most mature option. Use async extension with asyncpg for async database access.</li>
+                        <li><strong>SQLModel</strong> bridges SQLAlchemy and Pydantic, allowing one class for both. Convenient but can create coupling — use with caution for complex projects.</li>
+                        <li><strong>Tortoise ORM</strong> is Django-inspired and async. Simpler than SQLAlchemy but less powerful.</li>
+                        <li>Maintain <strong>clear separation between database models and Pydantic schemas</strong>. They serve different purposes and will diverge.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="subsection" id="migration-strategy">
+                <h3>3.4 Migration Strategy</h3>
+
+                <div class="card drf">
+                    <div class="card-title">DRF — Django Migrations</div>
+                    <ul>
+                        <li>Django's migration system is <strong>automatic and robust</strong>. makemigrations detects changes, migrate applies them.</li>
+                        <li><strong>Always review generated migration files</strong> before committing.</li>
+                        <li><strong>Squash migrations periodically</strong> for stable apps with long migration chains.</li>
+                        <li>Create <strong>separate data migration files</strong> using RunPython. Keep them idempotent and reversible.</li>
+                        <li><strong>Never edit a migration that has been applied</strong> to shared environments. Create a new one instead.</li>
+                    </ul>
+                </div>
+
+                <div class="card fastapi">
+                    <div class="card-title">FastAPI — Alembic / Aerich</div>
+                    <ul>
+                        <li><strong>Alembic</strong> is the standard migration tool for SQLAlchemy. Requires more manual configuration than Django's system.</li>
+                        <li>Auto-generated scripts <strong>require more review and manual adjustment</strong> than Django's.</li>
+                        <li><strong>Aerich</strong> is the migration tool for Tortoise ORM, with a similar workflow to Django's.</li>
+                        <li>Test migrations <strong>both forward and backward</strong>.</li>
+                    </ul>
+                </div>
+
+                <div class="callout note">
+                    <div class="callout-label">📝 Shared Best Practices</div>
+                    <p>Run migrations as a <strong>separate deployment step</strong> before starting new application instances. For zero-downtime deployments, make all schema changes backward-compatible: add columns as nullable first, deploy code that writes to both, then make non-nullable in subsequent deployments.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ============================================= -->
+        <!-- PHASE 4: API DEVELOPMENT -->
+        <!-- ============================================= -->
+        <section class="phase-section phase-4" id="phase-4">
+            <div class="phase-header">
+                <div class="phase-label">Phase 4</div>
+                <h2>API Development</h2>
+            </div>
+
+            <div class="subsection" id="rest-principles">
+                <h3>4.1 RESTful API Design Principles</h3>
+                <ul>
+                    <li><strong>Resources are nouns, not verbs.</strong> Use /orders, not /getOrders. The HTTP method conveys the action.</li>
+                    <li><strong>Use plural nouns</strong> for collection endpoints: /users, /products, /orders.</li>
+                    <li><strong>Nest resources to show relationships</strong>, but limit nesting to one level.</li>
+                </ul>
+
+                <h4>HTTP Methods</h4>
+                <ul>
+                    <li><strong>GET</strong> — retrieves resources. Must be safe and idempotent.</li>
+                    <li><strong>POST</strong> — creates new resources. Returns 201 Created with Location header.</li>
+                    <li><strong>PUT</strong> — replaces an entire resource. Idempotent.</li>
+                    <li><strong>PATCH</strong> — partially updates. Send only changed fields.</li>
+                    <li><strong>DELETE</strong> — removes a resource. Returns 204 No Content.</li>
+                </ul>
+
+                <h4>HTTP Status Codes</h4>
+                <ul>
+                    <li><strong>200</strong> — successful GET, PUT, PATCH</li>
+                    <li><strong>201</strong> — successful POST creating a resource</li>
+                    <li><strong>204</strong> — successful DELETE or no-body updates</li>
+                    <li><strong>400</strong> — client errors, validation failures</li>
+                    <li><strong>401</strong> — authentication failure (not identified)</li>
+                    <li><strong>403</strong> — authorization failure (identified but not permitted)</li>
+                    <li><strong>404</strong> — resource not found</li>
+                    <li><strong>409</strong> — conflicts (duplicate entries, state conflicts)</li>
+                    <li><strong>422</strong> — well-formed but semantically invalid (FastAPI's default)</li>
+                    <li><strong>429</strong> — rate limiting</li>
+                    <li><strong>500</strong> — unexpected server errors</li>
+                </ul>
+
+                <div class="callout tip">
+                    <div class="callout-label">Best Practice</div>
+                    <p><strong>Standardize error response format</strong> across all endpoints. Include a machine-readable error code, a human-readable message, and field-level error details for validation failures.</p>
+                </div>
+            </div>
+
+            <div class="subsection" id="endpoint-design">
+                <h3>4.2 Endpoint Design</h3>
+
+                <h4>Collection Endpoints</h4>
+                <ul>
+                    <li><strong>Pagination is mandatory</strong> for all list endpoints:
+                        <ul>
+                            <li><strong>Offset/limit</strong>: Simple, allows page jumping, degrades with large offsets.</li>
+                            <li><strong>Cursor-based</strong>: Performant at any depth, only forward/backward navigation. Best for infinite scroll or large datasets.</li>
+                            <li><strong>Page number</strong>: Familiar but has the same large-offset problem.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Filtering</strong> uses query parameters. DRF: django-filter. FastAPI: fastapi-filter or custom dependencies.</li>
+                    <li><strong>Sorting</strong> uses an ordering query parameter.</li>
+                    <li><strong>Search</strong> across multiple fields. DRF: built-in SearchFilter. FastAPI: manual implementation with PostgreSQL full-text search.</li>
+                </ul>
+
+                <h4>Action & Bulk Endpoints</h4>
+                <ul>
+                    <li>For non-CRUD operations, use <strong>sub-resource endpoints</strong>: POST /orders/123/cancel</li>
+                    <li>Bulk endpoints should return <strong>detailed per-item results</strong> indicating successes and failures.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="request-response">
+                <h3>4.3 Request & Response Handling</h3>
+
+                <div class="card drf">
+                    <div class="card-title">DRF Approach</div>
+                    <ul>
+                        <li><strong>Serializers</strong> are the core — validate incoming data, transform model instances to JSON.</li>
+                        <li><strong>ModelSerializer</strong> auto-generates fields from a model. Override for custom behavior.</li>
+                        <li>Use <strong>separate serializers for read and write</strong> when request/response shapes differ.</li>
+                        <li><strong>ViewSets</strong> combine related views (list, create, retrieve, update, destroy). <strong>Routers</strong> auto-generate URL patterns.</li>
+                        <li>Use <strong>APIView or generic views</strong> for more control or non-CRUD operations.</li>
+                    </ul>
+                </div>
+
+                <div class="card fastapi">
+                    <div class="card-title">FastAPI Approach</div>
+                    <ul>
+                        <li><strong>Pydantic models (schemas)</strong> handle all validation and serialization. Define separate schemas for requests, responses, queries, and DB representations.</li>
+                        <li>FastAPI <strong>automatically validates request data</strong> and returns 422 errors with detailed messages.</li>
+                        <li>Use <strong>dependency injection</strong> for shared logic — DB sessions, current user, pagination, permissions.</li>
+                        <li><strong>Path operation functions</strong> are simpler than DRF views — receive validated typed params, return data.</li>
+                        <li>For complex logic, call <strong>service functions</strong> from path operations.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="subsection" id="auth">
+                <h3>4.4 Authentication & Authorization</h3>
+
+                <h4>Authentication Mechanisms</h4>
+                <ul>
+                    <li><strong>JWT Token-based</strong> (most common for SPAs/mobile):
+                        <ul>
+                            <li>DRF: <strong>djangorestframework-simplejwt</strong></li>
+                            <li>FastAPI: <strong>python-jose or PyJWT</strong> with dependency injection</li>
+                            <li>Store access tokens in memory, refresh tokens in <strong>HTTP-only secure cookies</strong></li>
+                            <li>Access token: 5-15 min. Refresh token: days to weeks with rotation.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Session-based</strong>: Appropriate for same-origin web applications. Django has built-in support.</li>
+                    <li><strong>API key</strong>: Suitable for server-to-server communication. Hash keys before storing.</li>
+                    <li><strong>OAuth2</strong>: DRF uses django-oauth-toolkit. FastAPI uses built-in security schemes with authlib.</li>
+                </ul>
+
+                <h4>Authorization Patterns</h4>
+                <ul>
+                    <li><strong>Object-level permissions</strong>: DRF has permission classes. FastAPI uses dependency injection with HTTPException(403).</li>
+                    <li><strong>Role-based access control (RBAC)</strong>: DRF leverages Django's groups/permissions system. FastAPI implements roles via user model fields or tables.</li>
+                    <li><strong>Attribute-based access control (ABAC)</strong>: More flexible than RBAC but more complex.</li>
+                    <li><strong>Principle of least privilege</strong>: Default to denying access. Explicitly grant permissions.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="api-versioning">
+                <h3>4.5 API Versioning</h3>
+                <ul>
+                    <li><strong>URI versioning</strong> (/api/v1/users): Most explicit, easiest to understand.</li>
+                    <li><strong>Header versioning</strong>: Cleaner URLs but harder for clients.</li>
+                    <li><strong>Query parameter versioning</strong>: Easy to test but semantically awkward.</li>
+                    <li>DRF has <strong>built-in versioning support</strong> for all approaches. FastAPI requires manual implementation.</li>
+                    <li><strong>Maintain backward compatibility</strong> within a version. Adding fields is safe; removing requires a new version.</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ============================================= -->
+        <!-- PHASE 5: CODE ORGANIZATION -->
+        <!-- ============================================= -->
+        <section class="phase-section phase-5" id="phase-5">
+            <div class="phase-header">
+                <div class="phase-label">Phase 5</div>
+                <h2>Code Organization</h2>
+            </div>
+
+            <div class="subsection" id="layered-architecture">
+                <h3>5.1 Layered Architecture</h3>
+
+                <h4>Presentation Layer (Routes/Views)</h4>
+                <ul>
+                    <li>Handles <strong>HTTP concerns only</strong>: parsing requests, returning responses, setting status codes.</li>
+                    <li>Contains <strong>no business logic</strong>. If you find conditional logic beyond "which service to call," it's in the wrong place.</li>
+                    <li>DRF: ViewSets, APIViews, generic views. FastAPI: path operation functions in router modules.</li>
+                </ul>
+
+                <h4>Service Layer (Business Logic)</h4>
+                <ul>
+                    <li>Contains <strong>all business rules and orchestration</strong>. Enforces invariants, coordinates multi-step operations.</li>
+                    <li>Services are <strong>framework-agnostic</strong> — should work from API endpoints, management commands, Celery tasks, or tests.</li>
+                    <li>Each service handles <strong>one business operation</strong>: create_order, cancel_subscription, process_payment.</li>
+                </ul>
+
+                <h4>Data Access Layer (Repositories/ORM)</h4>
+                <ul>
+                    <li>Encapsulates <strong>all database queries</strong>. In Django: model managers and QuerySets. In SQLAlchemy: repository classes.</li>
+                    <li>Handles <strong>query optimization</strong> — select_related, prefetch_related, deferred loading.</li>
+                </ul>
+
+                <h4>Schema/Serializer Layer</h4>
+                <ul>
+                    <li>Defines <strong>data shapes</strong> for API requests and responses.</li>
+                    <li>Multiple schemas per entity are normal — creation, update, list, detail, internal.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="settings-config">
+                <h3>5.2 Settings & Configuration Management</h3>
+
+                <div class="card drf">
+                    <div class="card-title">DRF — Django Settings</div>
+                    <ul>
+                        <li>Split into <strong>base.py, development.py, staging.py, production.py</strong> within a settings package.</li>
+                        <li>Load secrets from <strong>environment variables</strong> using django-environ or python-decouple.</li>
+                        <li><strong>Never use DEBUG=True in production.</strong></li>
+                    </ul>
+                </div>
+
+                <div class="card fastapi">
+                    <div class="card-title">FastAPI — Pydantic Settings</div>
+                    <ul>
+                        <li>Use <strong>Pydantic's BaseSettings</strong> for typed, validated configuration. Environment variables loaded automatically.</li>
+                        <li>Support <strong>.env files</strong> for local development.</li>
+                        <li>Use <strong>@lru_cache</strong> on the settings factory to load once and reuse.</li>
+                        <li>Group into <strong>nested models</strong> — DatabaseSettings, RedisSettings, AuthSettings.</li>
+                    </ul>
+                </div>
+
+                <div class="callout note">
+                    <div class="callout-label">📝 Twelve-Factor Compliance</div>
+                    <p>Store configuration in the environment. Maintain a <strong>.env.example</strong> file. <strong>Validate configuration at startup</strong> — fail fast with clear errors rather than failing at runtime.</p>
+                </div>
+            </div>
+
+            <div class="subsection" id="dependency-injection">
+                <h3>5.3 Dependency Injection</h3>
+                <ul>
+                    <li><strong>DRF</strong>: Less formal — uses settings, middleware, signals, mixins, and serializer context for dependency management.</li>
+                    <li><strong>FastAPI</strong>: First-class <strong>Depends()</strong> system — central to the framework. Dependencies can be sync/async functions, classes, or generators. Supports recursive resolution, testing overrides, and cross-cutting concerns (auth, DB sessions, rate limiting).</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ============================================= -->
+        <!-- PHASE 6: TESTING -->
+        <!-- ============================================= -->
+        <section class="phase-section phase-6" id="phase-6">
+            <div class="phase-header">
+                <div class="phase-label">Phase 6</div>
+                <h2>Testing</h2>
+            </div>
+
+            <div class="subsection" id="testing-philosophy">
+                <h3>6.1 Testing Philosophy</h3>
+                <ul>
+                    <li><strong>Tests are not optional.</strong> Code without tests is a liability.</li>
+                    <li>Aim for a <strong>testing pyramid</strong>: many unit tests (fast), fewer integration tests, small number of end-to-end tests.</li>
+                    <li><strong>Test behavior, not implementation.</strong> Makes tests resilient to refactoring.</li>
+                    <li>Write tests that <strong>serve as documentation</strong> — developers should understand behavior by reading tests.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="testing-strategy">
+                <h3>6.2 Strategy by Layer</h3>
+
+                <h4>Unit Tests</h4>
+                <ul>
+                    <li>Test <strong>service layer functions in isolation</strong>. Mock database and external calls.</li>
+                    <li>Test <strong>serializers/schemas</strong> with various valid and invalid inputs.</li>
+                    <li>Should run in <strong>milliseconds</strong>. If slow, you're hitting real infrastructure — mock it.</li>
+                </ul>
+
+                <h4>Integration Tests</h4>
+                <ul>
+                    <li>Test <strong>API endpoints</strong> with HTTP requests. Verify status codes, headers, response body.</li>
+                    <li>DRF: <strong>APIClient</strong>. FastAPI: <strong>TestClient</strong> (sync) or <strong>httpx.AsyncClient</strong> (async).</li>
+                    <li>Test <strong>authentication and authorization</strong> — unauthenticated rejection, resource ownership, role restrictions.</li>
+                    <li>Use a <strong>real test database</strong> (not mocks) for integration tests.</li>
+                </ul>
+
+                <h4>End-to-End Tests</h4>
+                <ul>
+                    <li>Test <strong>complete workflows</strong> spanning multiple endpoints.</li>
+                    <li><strong>Slow and brittle</strong> — minimize number, focus on critical business workflows.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="test-infrastructure">
+                <h3>6.3 Test Infrastructure</h3>
+
+                <h4>Test Data Management</h4>
+                <ul>
+                    <li><strong>Factories over fixtures.</strong> Use factory_boy (Django) or factory patterns (FastAPI). Composable, maintainable, explicit.</li>
+                    <li><strong>Faker</strong> for realistic random data. Seed for reproducible runs.</li>
+                    <li><strong>Isolate test data</strong> — each test creates its own data, no dependencies on other tests.</li>
+                </ul>
+
+                <div class="card drf">
+                    <div class="card-title">DRF-Specific Testing</div>
+                    <ul>
+                        <li><strong>TestCase</strong> wraps each test in a transaction that rolls back, ensuring isolation.</li>
+                        <li><strong>@override_settings</strong> for testing under different configurations.</li>
+                        <li><strong>SimpleTestCase</strong> for tests without database access (faster).</li>
+                    </ul>
+                </div>
+
+                <div class="card fastapi">
+                    <div class="card-title">FastAPI-Specific Testing</div>
+                    <ul>
+                        <li>Use <strong>pytest with pytest-asyncio</strong> for async endpoints and services.</li>
+                        <li><strong>Override dependencies</strong> via app.dependency_overrides for mocks and test DBs.</li>
+                        <li>Use <strong>HTTPX's async client</strong> to test actual async execution paths.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="subsection" id="test-quality">
+                <h3>6.4 Test Quality Metrics</h3>
+                <ul>
+                    <li><strong>Code coverage</strong>: Aim 80-90% as guideline, but 100% doesn't guarantee correct tests.</li>
+                    <li>Focus coverage on <strong>business-critical paths</strong> — payments, auth, validation, permissions.</li>
+                    <li>Use <strong>mutation testing</strong> (mutmut) to verify tests actually catch bugs.</li>
+                    <li><strong>Run tests in CI on every commit.</strong> Failing tests block merges. No exceptions.</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ============================================= -->
+        <!-- PHASE 7: PERFORMANCE & OPTIMIZATION -->
+        <!-- ============================================= -->
+        <section class="phase-section phase-7" id="phase-7">
+            <div class="phase-header">
+                <div class="phase-label">Phase 7</div>
+                <h2>Performance & Optimization</h2>
+            </div>
+
+            <div class="subsection" id="query-optimization">
+                <h3>7.1 Database Query Optimization</h3>
+
+                <h4>The N+1 Query Problem</h4>
+                <ul>
+                    <li><strong>The most common performance killer in both frameworks.</strong></li>
+                    <li>DRF/Django: Use <strong>select_related</strong> (JOINs for FK/OneToOne) and <strong>prefetch_related</strong> (separate query + Python join for M2M/reverse FK).</li>
+                    <li>FastAPI/SQLAlchemy: Use <strong>joinedload</strong> or <strong>selectinload</strong> in queries.</li>
+                    <li><strong>Monitor queries in development.</strong> Use django-debug-toolbar or SQLAlchemy echo mode. 100+ queries on a list endpoint = N+1 problem.</li>
+                </ul>
+
+                <h4>Indexing Strategy</h4>
+                <ul>
+                    <li><strong>Index every column</strong> used in WHERE, ORDER BY, and JOIN clauses.</li>
+                    <li><strong>Composite indexes</strong>: Column order matters. Most selective column first.</li>
+                    <li><strong>Partial indexes</strong> for commonly filtered subsets.</li>
+                    <li><strong>Don't over-index.</strong> Each index slows writes and consumes storage.</li>
+                    <li>Use <strong>EXPLAIN ANALYZE</strong> in PostgreSQL for slow query analysis.</li>
+                </ul>
+
+                <h4>Additional Techniques</h4>
+                <ul>
+                    <li>Use <strong>database-level aggregation</strong> instead of fetching all rows and computing in Python.</li>
+                    <li><strong>Paginate aggressively.</strong> Never return unbounded result sets.</li>
+                    <li>Use <strong>only()/defer()</strong> (Django) or <strong>load_only()</strong> (SQLAlchemy) to fetch only needed columns.</li>
+                    <li>Use <strong>database connection pooling</strong> — PgBouncer or built-in SQLAlchemy pooling.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="caching">
+                <h3>7.2 Caching Strategy</h3>
+
+                <h4>Cache Layers</h4>
+                <ol>
+                    <li><strong>Application-level</strong>: Redis or Memcached for expensive queries, computed values.</li>
+                    <li><strong>HTTP-level</strong>: Cache-Control headers, ETag, Last-Modified.</li>
+                    <li><strong>CDN caching</strong>: Static assets and public API responses.</li>
+                </ol>
+
+                <h4>Caching Patterns</h4>
+                <ul>
+                    <li><strong>Cache-aside (lazy loading)</strong>: Check cache → miss → fetch from DB → store → return. Most common.</li>
+                    <li><strong>Write-through</strong>: Update cache on every DB write. Always current but adds write latency.</li>
+                    <li><strong>Write-behind</strong>: Update cache immediately, persist to DB asynchronously. Best performance, risks data loss.</li>
+                    <li><strong>Cache invalidation</strong> is the hardest problem. Use TTL as simplest strategy, event-based for critical data.</li>
+                </ul>
+                <ul>
+                    <li>DRF: Django cache framework + <strong>django-cacheops</strong> or <strong>django-cachalot</strong> for automatic ORM-level caching.</li>
+                    <li>FastAPI: Redis directly via async client + <strong>fastapi-cache2</strong> for decorator-based caching.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="async-processing">
+                <h3>7.3 Asynchronous Processing</h3>
+                <h4>Background Tasks</h4>
+                <ul>
+                    <li><strong>Never perform long-running operations in request handlers.</strong> Emails, image processing, reports, slow API calls go to background tasks.</li>
+                    <li>DRF/Django: <strong>Celery</strong> (standard, with Redis/RabbitMQ). <strong>Django-Q2</strong> as simpler alternative.</li>
+                    <li>FastAPI: <strong>Celery</strong> for robust processing. Built-in <strong>BackgroundTasks</strong> for lightweight, non-critical tasks. <strong>ARQ</strong> for async-native task queue.</li>
+                </ul>
+                <h4>Task Design</h4>
+                <ul>
+                    <li>Make tasks <strong>idempotent</strong> — same task twice = same result. Essential for safe retries.</li>
+                    <li><strong>Set timeouts and retry limits</strong> for all tasks.</li>
+                    <li><strong>Monitor task queues</strong> — depth, processing time, failure rates. Use Flower for Celery.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="perf-monitoring">
+                <h3>7.4 Performance Monitoring</h3>
+                <ul>
+                    <li><strong>Instrument with APM tools</strong> — New Relic, Datadog, Sentry Performance, or OpenTelemetry.</li>
+                    <li>Track <strong>endpoint response times at p50, p95, p99</strong>. Averages hide tail latency.</li>
+                    <li>Monitor <strong>database query count and duration per request</strong>.</li>
+                    <li><strong>Profile memory and CPU</strong>. Watch for memory leaks in long-running workers.</li>
+                    <li><strong>Load test before launch</strong> using Locust or k6 at 2-3x expected peak traffic.</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ============================================= -->
+        <!-- PHASE 8: SECURITY -->
+        <!-- ============================================= -->
+        <section class="phase-section phase-8" id="phase-8">
+            <div class="phase-header">
+                <div class="phase-label">Phase 8</div>
+                <h2>Security Implementation</h2>
+            </div>
+
+            <div class="subsection" id="owasp">
+                <h3>8.1 OWASP Top 10 Protection</h3>
+
+                <h4>Injection Attacks</h4>
+                <ul>
+                    <li><strong>Always use parameterized queries.</strong> Both Django ORM and SQLAlchemy do this by default. Never use string concatenation for SQL.</li>
+                    <li><strong>Validate and sanitize all input</strong> from every source.</li>
+                </ul>
+
+                <h4>Broken Authentication</h4>
+                <ul>
+                    <li><strong>Hash passwords using bcrypt, argon2, or scrypt</strong> — never MD5 or SHA-256.</li>
+                    <li><strong>Enforce strong password policies</strong> and check against breached password lists.</li>
+                    <li><strong>Implement account lockout</strong> after repeated failed attempts.</li>
+                </ul>
+
+                <h4>Broken Access Control</h4>
+                <ul>
+                    <li><strong>Check permissions on every request</strong>, not just initial authentication.</li>
+                    <li><strong>Validate resource ownership</strong> — verify order 123 belongs to the requesting user.</li>
+                    <li>Use <strong>UUIDs instead of sequential IDs</strong> for public resource identifiers.</li>
+                </ul>
+
+                <h4>Security Misconfiguration</h4>
+                <ul>
+                    <li><strong>Disable debug mode in production.</strong></li>
+                    <li><strong>Set security headers</strong>: CSP, X-Content-Type-Options, X-Frame-Options, HSTS, X-XSS-Protection.</li>
+                    <li><strong>Restrict CORS origins.</strong> Never use wildcard (*) for authenticated APIs.</li>
+                </ul>
+
+                <h4>Sensitive Data Exposure</h4>
+                <ul>
+                    <li><strong>Use HTTPS everywhere.</strong> Configure HSTS headers.</li>
+                    <li><strong>Never log sensitive data</strong> — passwords, tokens, credit cards, PII.</li>
+                    <li><strong>Encrypt sensitive data at rest</strong> and <strong>mask in API responses.</strong></li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="rate-limiting">
+                <h3>8.2 Rate Limiting</h3>
+                <ul>
+                    <li><strong>Implement on all endpoints</strong>, stricter on auth endpoints.</li>
+                    <li>DRF: Built-in <strong>throttling classes</strong> (AnonRateThrottle, UserRateThrottle, ScopedRateThrottle).</li>
+                    <li>FastAPI: Use <strong>slowapi</strong> with Redis backend.</li>
+                    <li>Use <strong>sliding window</strong> rate limiting. Return <strong>429 with Retry-After header</strong>.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="input-validation">
+                <h3>8.3 Input Validation</h3>
+                <ul>
+                    <li><strong>Validate everything</strong>: types, lengths, ranges, formats, file types and sizes.</li>
+                    <li><strong>Whitelist acceptable values</strong> rather than blacklisting dangerous ones.</li>
+                    <li>Validate at <strong>schema level</strong> for format and <strong>service level</strong> for business rules.</li>
+                    <li><strong>Limit request body size</strong> at server/middleware level.</li>
+                    <li><strong>Sanitize file uploads</strong> — validate MIME by content inspection, scan for malware, store in isolated locations.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="secrets-management">
+                <h3>8.4 Secrets Management</h3>
+                <ul>
+                    <li><strong>Never store secrets in source code</strong>, committed config files, or Docker images.</li>
+                    <li>Use <strong>environment variables</strong> as minimum viable approach.</li>
+                    <li>For production: <strong>HashiCorp Vault, AWS Secrets Manager, Google Secret Manager</strong>, or Doppler.</li>
+                    <li><strong>Rotate secrets regularly.</strong> Use <strong>different secrets per environment.</strong></li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ============================================= -->
+        <!-- PHASE 9: DOCUMENTATION -->
+        <!-- ============================================= -->
+        <section class="phase-section phase-9" id="phase-9">
+            <div class="phase-header">
+                <div class="phase-label">Phase 9</div>
+                <h2>Documentation</h2>
+            </div>
+
+            <div class="subsection" id="api-docs">
+                <h3>9.1 API Documentation</h3>
+
+                <div class="card drf">
+                    <div class="card-title">DRF Documentation</div>
+                    <ul>
+                        <li><strong>drf-spectacular</strong> is recommended for generating OpenAPI 3.0 schemas. Introspects serializers, views, and URLs.</li>
+                        <li>drf-yasg is an older alternative (Swagger 2.0). Use drf-spectacular for new projects.</li>
+                        <li>Both provide <strong>Swagger UI and ReDoc</strong> interfaces.</li>
+                        <li><strong>Annotate views and serializers</strong> with docstrings and decorators for descriptions and examples.</li>
+                    </ul>
+                </div>
+
+                <div class="card fastapi">
+                    <div class="card-title">FastAPI Documentation</div>
+                    <ul>
+                        <li>Generates <strong>OpenAPI documentation automatically</strong> from type hints and Pydantic models — one of FastAPI's strongest features.</li>
+                        <li><strong>Swagger UI</strong> at /docs and <strong>ReDoc</strong> at /redoc with zero configuration.</li>
+                        <li><strong>Type hints drive documentation accuracy.</strong> Use descriptive field names, Field() annotations, and Enum types.</li>
+                        <li>Add <strong>tags, summaries, descriptions, and response models</strong> to enrich docs.</li>
+                    </ul>
+                </div>
+
+                <div class="callout tip">
+                    <div class="callout-label">📝 Shared Practices</div>
+                    <p><strong>Keep docs in sync with code</strong> by generating from code. Include <strong>request/response examples</strong> for every endpoint. Document <strong>authentication requirements</strong> and <strong>error responses</strong> with status codes and body formats. Version documentation alongside API versions.</p>
+                </div>
+            </div>
+
+            <div class="subsection" id="internal-docs">
+                <h3>9.2 Internal Documentation</h3>
+                <ul>
+                    <li>Maintain <strong>Architecture Decision Records (ADRs)</strong> for significant technical decisions and their reasoning.</li>
+                    <li>Write a <strong>comprehensive README</strong> — purpose, quick start, environment setup, common tasks, testing, deployment.</li>
+                    <li>Document <strong>environment variables</strong> with purpose, format, defaults, and required/optional status.</li>
+                    <li>Create <strong>runbooks</strong> for operational procedures — migrations, backups, incident response, rollbacks, scaling.</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ============================================= -->
+        <!-- PHASE 10: DEPLOYMENT -->
+        <!-- ============================================= -->
+        <section class="phase-section phase-10" id="phase-10">
+            <div class="phase-header">
+                <div class="phase-label">Phase 10</div>
+                <h2>Deployment</h2>
+            </div>
+
+            <div class="subsection" id="app-server">
+                <h3>10.1 Application Server Selection</h3>
+
+                <div class="card drf">
+                    <div class="card-title">DRF Server</div>
+                    <ul>
+                        <li><strong>Gunicorn</strong> is the standard WSGI server. Workers = (2 × CPU cores) + 1.</li>
+                        <li>Use <strong>Gunicorn with Uvicorn workers</strong> for async support.</li>
+                        <li><strong>Never use Django's runserver in production.</strong></li>
+                    </ul>
+                </div>
+
+                <div class="card fastapi">
+                    <div class="card-title">FastAPI Server</div>
+                    <ul>
+                        <li><strong>Uvicorn</strong> is the primary ASGI server. Use --workers flag or Gunicorn with UvicornWorker.</li>
+                        <li><strong>Hypercorn</strong> is an alternative with HTTP/2 support.</li>
+                    </ul>
+                </div>
+
+                <h4>Reverse Proxy</h4>
+                <ul>
+                    <li>Always place <strong>Nginx, Caddy, or a cloud load balancer</strong> in front of the application server.</li>
+                    <li>Handles <strong>TLS termination, static files, request buffering, connection management, and security filtering</strong>.</li>
+                    <li>Configure <strong>health check endpoints</strong> for availability monitoring.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="containerization">
+                <h3>10.2 Containerization</h3>
+                <ul>
+                    <li>Use <strong>multi-stage Docker builds</strong>: build stage with dev deps, runtime stage with production only.</li>
+                    <li><strong>Base image</strong>: python:3.12-slim (safer default) or python:3.12-alpine (smaller but C compilation issues).</li>
+                    <li><strong>Run as non-root user</strong> inside the container.</li>
+                    <li><strong>Docker Compose for local dev only.</strong> Use Kubernetes, ECS, or managed platforms for production.</li>
+                    <li><strong>Pin all versions</strong> — base image tags and pip packages for reproducible builds.</li>
+                    <li>Use <strong>.dockerignore</strong> to exclude VCS, venvs, local config, test data from build context.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="cicd">
+                <h3>10.3 CI/CD Pipeline</h3>
+
+                <h4>Continuous Integration</h4>
+                <ol>
+                    <li><strong>Trigger on every push</strong> to any branch and every PR to main.</li>
+                    <li><strong>Lint and format check</strong> — fail on violations.</li>
+                    <li><strong>Type check</strong> — fail on type errors.</li>
+                    <li><strong>Run full test suite</strong> against real PostgreSQL (not SQLite).</li>
+                    <li><strong>Measure coverage</strong> — fail if below threshold.</li>
+                    <li><strong>Security scan</strong> — dependency vulnerabilities and static analysis.</li>
+                    <li><strong>Build Docker image</strong> to verify build success.</li>
+                </ol>
+
+                <h4>Continuous Deployment</h4>
+                <ol>
+                    <li><strong>Build and tag Docker image</strong> with git commit hash / semantic version.</li>
+                    <li><strong>Push to container registry</strong> (ECR, GCR, GHCR).</li>
+                    <li><strong>Run migrations separately</strong> — not as part of app startup.</li>
+                    <li><strong>Deploy to staging</strong> automatically on merge to main. Run smoke tests.</li>
+                    <li><strong>Deploy to production</strong> with manual approval for high-risk changes.</li>
+                    <li>Use <strong>blue-green or rolling deployments</strong> for zero downtime.</li>
+                    <li><strong>Canary deployments</strong> for high-risk changes — small traffic %, monitor, gradually increase.</li>
+                    <li><strong>Automated rollback</strong> if health checks fail.</li>
+                </ol>
+
+                <h4>CI/CD Tools</h4>
+                <ul>
+                    <li><strong>GitHub Actions</strong>: Tight GitHub integration, extensive marketplace.</li>
+                    <li><strong>GitLab CI/CD</strong>: Built into GitLab.</li>
+                    <li><strong>Jenkins</strong>: Self-hosted, highly customizable, requires maintenance.</li>
+                    <li><strong>CircleCI, Buildkite</strong>: Third-party with various strengths.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="infrastructure">
+                <h3>10.4 Infrastructure Decisions</h3>
+                <ul>
+                    <li><strong>AWS</strong>: Most comprehensive. EC2/ECS, RDS, ElastiCache, S3, CloudFront, SQS.</li>
+                    <li><strong>GCP</strong>: Strong in Kubernetes (GKE) and ML. Cloud Run for serverless containers.</li>
+                    <li><strong>Azure</strong>: Strong enterprise integrations.</li>
+                    <li><strong>DigitalOcean, Render, Railway, Fly.io</strong>: Simpler platforms for smaller projects.</li>
+                    <li><strong>Use managed services</strong> for databases, caching, message brokers unless you have a compelling reason to self-host.</li>
+                    <li>For most projects, a <strong>managed container platform</strong> (ECS, Cloud Run) is sufficient over Kubernetes.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="prod-checklist">
+                <h3>10.5 Production Configuration Checklist</h3>
+                <div class="card important">
+                    <div class="card-title">🚀 Pre-Launch Checklist</div>
+                    <ul>
+                        <li>✅ Debug mode <strong>disabled</strong></li>
+                        <li>✅ Secret key <strong>randomly generated and stored securely</strong></li>
+                        <li>✅ Database using <strong>production credentials with connection pooling</strong></li>
+                        <li>✅ Static files served by <strong>CDN or reverse proxy</strong></li>
+                        <li>✅ Media files in <strong>object storage</strong> (S3, GCS) with signed URLs</li>
+                        <li>✅ <strong>HTTPS enforced</strong> with HSTS headers</li>
+                        <li>✅ <strong>CORS restricted</strong> to known origins</li>
+                        <li>✅ Logging configured to <strong>structured JSON</strong> at WARNING+ level</li>
+                        <li>✅ <strong>Error reporting</strong> configured (Sentry, Bugsnag)</li>
+                        <li>✅ <strong>Health check endpoint</strong> available and monitored</li>
+                        <li>✅ <strong>Rate limiting enabled</strong></li>
+                        <li>✅ <strong>Backups automated and tested</strong></li>
+                        <li>✅ <strong>Firewall rules</strong> restrict DB/cache access</li>
+                        <li>✅ Application runs as <strong>non-root user</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ============================================= -->
+        <!-- PHASE 11: MAINTENANCE & SCALING -->
+        <!-- ============================================= -->
+        <section class="phase-section phase-11" id="phase-11">
+            <div class="phase-header">
+                <div class="phase-label">Phase 11</div>
+                <h2>Maintenance & Scaling</h2>
+            </div>
+
+            <div class="subsection" id="logging">
+                <h3>11.1 Logging</h3>
+
+                <h4>Logging Strategy</h4>
+                <ul>
+                    <li>Use <strong>structured logging (JSON)</strong> — searchable, parseable, integrable with aggregation tools.</li>
+                    <li><strong>Log levels have meaning</strong>:
+                        <ul>
+                            <li><strong>DEBUG</strong>: Detailed diagnostics, disabled in production.</li>
+                            <li><strong>INFO</strong>: Significant normal events — user registered, order placed.</li>
+                            <li><strong>WARNING</strong>: Unexpected but recoverable — deprecated API used, slow query.</li>
+                            <li><strong>ERROR</strong>: Failures preventing operation — payment failed, DB connection lost.</li>
+                            <li><strong>CRITICAL</strong>: System-level failures requiring immediate attention.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Include context</strong>: request ID, user ID, endpoint, timestamp, duration, business identifiers.</li>
+                    <li><strong>Request ID tracing</strong>: Generate unique ID at entry point, include in every log entry and outbound call.</li>
+                </ul>
+
+                <h4>Log Aggregation</h4>
+                <ul>
+                    <li>Send to centralized platform: <strong>ELK Stack, Grafana Loki, Datadog, CloudWatch</strong>.</li>
+                    <li>Set up <strong>log-based alerts</strong> for error rate spikes and security events.</li>
+                    <li><strong>Retain logs</strong>: 30-90 days operational, 1-7 years audit.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="monitoring">
+                <h3>11.2 Monitoring & Alerting</h3>
+
+                <h4>Application Metrics</h4>
+                <ul>
+                    <li><strong>Response time distribution</strong> — p50, p95, p99 per endpoint. Alert on p95 degradation.</li>
+                    <li><strong>Error rate</strong> — percentage of 5xx responses.</li>
+                    <li><strong>Request throughput</strong> — requests per second over time.</li>
+                    <li><strong>DB connection pool utilization</strong> and <strong>task queue depth</strong>.</li>
+                </ul>
+
+                <h4>Health Checks</h4>
+                <ul>
+                    <li><strong>Liveness endpoint</strong> (/healthz): Returns 200 if process is running. Used by orchestrators to restart unhealthy instances.</li>
+                    <li><strong>Readiness endpoint</strong> (/ready): Verifies DB, cache, and dependency connectivity. Used to route traffic only to ready instances.</li>
+                </ul>
+
+                <h4>Alerting Principles</h4>
+                <ul>
+                    <li><strong>Alert on symptoms, not causes.</strong> Alert on "response time > 500ms" not "CPU > 80%."</li>
+                    <li><strong>Reduce alert noise.</strong> Every alert should require action.</li>
+                    <li>Use <strong>escalation policies</strong> — on-call → team lead → engineering management.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="scaling">
+                <h3>11.3 Scaling Strategies</h3>
+
+                <h4>Vertical Scaling</h4>
+                <ul>
+                    <li><strong>Increase resources on existing servers</strong> — simple but has limits.</li>
+                    <li><strong>Scale the database vertically first.</strong> More RAM for query caching is often the most impactful action.</li>
+                </ul>
+
+                <h4>Horizontal Scaling</h4>
+                <ul>
+                    <li><strong>Add more application instances</strong> behind a load balancer. Requires <strong>stateless application</strong> — no in-memory sessions, no local file storage.</li>
+                    <li><strong>Session storage in Redis</strong>, <strong>file storage in S3/GCS</strong>.</li>
+                    <li><strong>Load balancing</strong>: Round-robin, least-connections, or IP-hash (avoid if possible).</li>
+                </ul>
+
+                <h4>Database Scaling</h4>
+                <ul>
+                    <li><strong>Read replicas</strong> for read-heavy workloads. DRF: Django database routers. FastAPI: separate connection pools.</li>
+                    <li><strong>Connection pooling</strong> with PgBouncer or built-in configs.</li>
+                    <li><strong>Table partitioning</strong> for very large tables.</li>
+                    <li><strong>Sharding as last resort</strong> — enormous complexity, avoid unless all other options exhausted.</li>
+                </ul>
+
+                <h4>Async Processing Scaling</h4>
+                <ul>
+                    <li><strong>Scale Celery workers independently</strong> from the web application.</li>
+                    <li>Use <strong>separate queues for different priorities</strong>.</li>
+                    <li><strong>Auto-scale workers</strong> based on queue depth using Kubernetes HPA or cloud auto-scaling.</li>
+                </ul>
+            </div>
+
+            <div class="subsection" id="long-term">
+                <h3>11.4 Long-Term Maintenance</h3>
+                <ul>
+                    <li><strong>Update dependencies regularly</strong> — monthly for minor versions, weekly for security patches. Use Dependabot or Renovate.</li>
+                    <li><strong>Plan major framework upgrades</strong> as deliberate projects. Read release notes, identify breaking changes, update incrementally.</li>
+                    <li><strong>Track technical debt explicitly</strong> — create tickets, allocate sprint time.</li>
+                    <li><strong>Refactor continuously in small increments</strong> rather than planning large rewrites.</li>
+                    <li><strong>Automated database backups</strong> with retention policies. <strong>Test restores regularly.</strong></li>
+                    <li><strong>Data archival strategy</strong> for old records — cold storage or archive tables.</li>
+                    <li><strong>GDPR/privacy compliance</strong>: Data deletion, export endpoints, consent management.</li>
+                    <li><strong>Document tribal knowledge</strong> — ADRs, wiki pages, inline comments for non-obvious context.</li>
+                    <li><strong>Onboarding documentation</strong> for new team members.</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ============================================= -->
+        <!-- QUICK DECISION REFERENCE -->
+        <!-- ============================================= -->
+        <section class="phase-section phase-4" id="decision-table">
+            <div class="phase-header">
+                <div class="phase-label">Quick Reference</div>
+                <h2>Decision Reference Table</h2>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Decision Point</th>
+                            <th>DRF</th>
+                            <th>FastAPI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>ORM</td><td>Django ORM (built-in)</td><td>SQLAlchemy 2.0 or SQLModel</td></tr>
+                        <tr><td>Migrations</td><td>Django Migrations (built-in)</td><td>Alembic</td></tr>
+                        <tr><td>Authentication</td><td>simplejwt</td><td>python-jose + custom deps</td></tr>
+                        <tr><td>Serialization</td><td>DRF Serializers</td><td>Pydantic Models</td></tr>
+                        <tr><td>Background Tasks</td><td>Celery + Redis</td><td>Celery + Redis or ARQ</td></tr>
+                        <tr><td>Caching</td><td>Django cache + cacheops</td><td>Redis + fastapi-cache2</td></tr>
+                        <tr><td>API Docs</td><td>drf-spectacular</td><td>Built-in (automatic)</td></tr>
+                        <tr><td>Testing Client</td><td>DRF APIClient</td><td>TestClient / HTTPX</td></tr>
+                        <tr><td>App Server</td><td>Gunicorn (WSGI)</td><td>Uvicorn (ASGI)</td></tr>
+                        <tr><td>Admin Interface</td><td>Django Admin (built-in)</td><td>None (build custom / SQLAdmin)</td></tr>
+                        <tr><td>Rate Limiting</td><td>DRF Throttling (built-in)</td><td>slowapi</td></tr>
+                        <tr><td>CORS</td><td>django-cors-headers</td><td>CORSMiddleware (built-in)</td></tr>
+                        <tr><td>Settings</td><td>django-environ + split files</td><td>Pydantic BaseSettings</td></tr>
+                        <tr><td>File Uploads</td><td>FileField + storage backends</td><td>python-multipart + manual</td></tr>
+                        <tr><td>WebSockets</td><td>Django Channels</td><td>Native WebSocket support</td></tr>
+                        <tr><td>Dependency Injection</td><td>Informal (mixins, context)</td><td>Built-in Depends() system</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ============================================= -->
+        <!-- FINAL REMINDERS -->
+        <!-- ============================================= -->
+        <section class="phase-section phase-6" id="final-reminders">
+            <div class="phase-header">
+                <div class="phase-label">Final Reminders</div>
+                <h2>Core Principles to Remember</h2>
+            </div>
+
+            <div class="reminders-grid">
+                <div class="reminder-item">
+                    <div class="reminder-icon">🎯</div>
+                    <div class="reminder-text"><strong>Start simple, measure, then optimize.</strong> Premature optimization wastes time on problems that may not exist.</div>
+                </div>
+                <div class="reminder-item">
+                    <div class="reminder-icon">🤖</div>
+                    <div class="reminder-text"><strong>Automate everything you do more than twice</strong> — testing, deployment, database migrations, environment setup.</div>
+                </div>
+                <div class="reminder-item">
+                    <div class="reminder-icon">🔒</div>
+                    <div class="reminder-text"><strong>Security is not a phase; it is a constant.</strong> Build it into every layer from the beginning.</div>
+                </div>
+                <div class="reminder-item">
+                    <div class="reminder-icon">🤝</div>
+                    <div class="reminder-text"><strong>Your API is a contract.</strong> Breaking changes break trust. Version deliberately and communicate proactively.</div>
+                </div>
+                <div class="reminder-item">
+                    <div class="reminder-icon">👁️</div>
+                    <div class="reminder-text"><strong>Logs, metrics, and alerts are not optional.</strong> You cannot fix what you cannot see.</div>
+                </div>
+                <div class="reminder-item">
+                    <div class="reminder-icon">💾</div>
+                    <div class="reminder-text"><strong>Back up your data, and test your restores.</strong> A backup that has never been restored is not a backup, it is a hope.</div>
+                </div>
+                <div class="reminder-item">
+                    <div class="reminder-icon">🧪</div>
+                    <div class="reminder-text"><strong>Write tests that matter.</strong> Critical paths first, edge cases second, happy paths last.</div>
+                </div>
+                <div class="reminder-item">
+                    <div class="reminder-icon">📝</div>
+                    <div class="reminder-text"><strong>Document your decisions, not just your code.</strong> Code shows what and how; documentation explains why.</div>
+                </div>
+                <div class="reminder-item">
+                    <div class="reminder-icon">🏗️</div>
+                    <div class="reminder-text"><strong>Choose boring technology when possible.</strong> PostgreSQL, Redis, Celery, Nginx — battle-tested and reliable. Save your complexity budget for your domain.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer style="text-align: center; padding: 60px 0 20px; color: var(--text-muted); font-size: 0.85rem;">
+            <p>This guide is designed for quick reference. Bookmark specific phases for rapid navigation during development.</p>
+            <p style="margin-top: 8px; opacity: 0.6;">DRF & FastAPI Reference Guide</p>
+        </footer>
+
+    </main>
+
+    <!-- Back to Top -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </button>
+
+    <script>
+        // TOC Panel Toggle
+        const tocToggle = document.getElementById('tocToggle');
+        const tocPanel = document.getElementById('tocPanel');
+        const tocOverlay = document.getElementById('tocOverlay');
+        const tocClose = document.getElementById('tocClose');
+
+        function openToc() {
+            tocPanel.classList.add('active');
+            tocOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeToc() {
+            tocPanel.classList.remove('active');
+            tocOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        tocToggle.addEventListener('click', openToc);
+        tocClose.addEventListener('click', closeToc);
+        tocOverlay.addEventListener('click', closeToc);
+
+        // Close TOC on link click
+        document.querySelectorAll('.toc-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                closeToc();
+            });
+        });
+
+        // Close TOC on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeToc();
+        });
+
+        // Progress Bar
+        const progressBar = document.getElementById('progressBar');
+        function updateProgress() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressBar.style.width = progress + '%';
+        }
+
+        // Back to Top Button
+        const backToTop = document.getElementById('backToTop');
+        function updateBackToTop() {
+            if (window.scrollY > 400) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        }
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Active TOC highlighting
+        const sections = document.querySelectorAll('.subsection[id], section[id]');
+        const tocLinks = document.querySelectorAll('.toc-links a');
+
+        function updateActiveTocLink() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Throttled scroll handler
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updateProgress();
+                    updateBackToTop();
+                    updateActiveTocLink();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // Toggle TOC sections (optional collapse - currently all open)
+        function toggleTocSection(element) {
+            const links = element.nextElementSibling;
+            if (links && links.classList.contains('toc-links')) {
+                const isHidden = links.style.display === 'none';
+                links.style.display = isHidden ? 'block' : 'none';
+            }
+        }
+
+        // Intersection Observer for fade-in animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationDelay = '0.1s';
+                    entry.target.style.animationPlayState = 'running';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.phase-section').forEach(section => {
+            section.style.animationPlayState = 'paused';
+            observer.observe(section);
+        });
+
+        // Initial state
+        updateProgress();
+        updateBackToTop();
+    </script>
+</body>
+</html>
+```
